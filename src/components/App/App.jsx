@@ -10,6 +10,16 @@ class App extends Component {
     contacts: data,
     filter: '',
   };
+  componentDidMount = () => {
+    const localCache = JSON.parse(localStorage.getItem('contacts'));
+    this.setState({ contacts: localCache || data });
+  };
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  };
+
   onInputChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -29,7 +39,7 @@ class App extends Component {
           contacts: [contact, ...prev.contacts],
         };
       } else
-        alert(`${inputName} with ${inputNumber} is already in contacts!!!`);
+        alert(`${inputName} contact with the ${inputNumber} already exists!!!`);
     });
   };
   deleteContact = selectId => {
